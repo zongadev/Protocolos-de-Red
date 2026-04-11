@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#define MAX 1024
+#define PORT 8080
+void comm(int client_fd){
+      char buffer[MAX];
+      char client_name[50];
+      printf("conetactdo %d",client_fd);
+    //Recibir nombre del cliente
+      recv(client_fd, client_name, sizeof(client_name), 0);
+      printf("Cliente conectado: %s\n", client_name);
+
+      while (1) {
+          
+          // Recibir mensaje del cliente
+          memset(buffer, 0, MAX);
+          int bytes = recv(client_fd, buffer, MAX, 0);
+          if (bytes <= 0) {
+              printf("Cliente desconectado.\n");
+              break;
+          }
+
+          if (strncmp(buffer, "FIN", 3) == 0) {
+              printf("%s ha finalizado la conexión.\n", client_name);
+              break;
+          }
+
+          printf("%s: %s", client_name, buffer);
+
+          // Enviar respuesta
+          printf("Servidor: ");
+          memset(buffer, 0, MAX);
+          fgets(buffer, MAX, stdin);
+          send(client_fd, buffer, strlen(buffer), 0);
+
+          if (strncmp(buffer, "FIN", 3) == 0) {
+              printf("Servidor finaliza la conexión.\n");
+              break;
+          }
+      }
+
+      close(client_fd);
+}
+int main() {
+    int server_fd, client_fd;
+    struct sockaddr_in server_addr, client_addr;
+    /*
+    sockaddr_in es un struc definida por la libreria <netinet/in.h>
+    struct sockaddr_in {
+    short sin_family;        // Tipo de dirección
+    unsigned short sin_port; // Puerto
+    struct in_addr sin_addr; // IP
+    char sin_zero[8];        // Padding
+};
+    */
+    
+
+    // Crear socket
+    server_fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (server_fd == -1) {
+        perror("Socket no pudo abrirse ... error ...");
+        exit(1);
+    }
+
+    // Configurar estructura
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(PORT);//htons convierte int en tcp/ip format: big endian
+    memset(&(server_addr.sin_zero), 0, 8); //limpia bytes de padding (?) rellena la estructura
+
+    // Asociar dirección y puerto
+    if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) != 0) {
+                        //Casteo ^
+        perror("Bind falló");
+        exit(1);
+    }
+
+    // Escuchar conexiones
+    if (listen(server_fd, 3) != 0) {
+        perror("Listen con error...");
+        exit(1);
+    }
+    while(1){
+    printf("Servidor esperando conexión en el puerto %d...\n", PORT);
+    socklen_t addr_size = sizeof(client_addr);
+    client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &addr_size);
+    if (client_fd < 0) {
+        perror("Falló al aceptar conexión");
+        exit(1);
+    }
+	    comm(client_fd);
+}
+    
+    close(server_fd);
+    return 0;
+}
+
