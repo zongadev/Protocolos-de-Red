@@ -31,7 +31,7 @@ git checkout nombre-de-tu-branch
 git merge main
 ```
 ---
-###Resumen rapido
+### Resumen rapido
 ```bash
 git checkout main
 git pull origin main
