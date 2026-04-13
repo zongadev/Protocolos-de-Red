@@ -44,14 +44,12 @@ git checkout -b mi-branch
 git add .
 git commit -m "Descripción del cambio"
 git push -u origin mi-branch
-=======
-=======
->>>>>>> 702d3b20b156e6de54b5a821ca862448318d93ea
+```
 Creamos cada uno nuestra rama con nuestor nombre
 ```bash
 git checkout -b nombre-de-tu-rama
 ```
-Si nuestra rama ya existe usas el comando de arriba sin `-b` \
+Si nuestra rama ya existe usas el comando de arriba sin `-b` 
 Sino tambien podes usar `git switch nombre-de-la-rama` \
 Chequeas en cual rama estas trabajando con `git branch`. La rama activa a parece con un asterisco \
 Una vez que haces el add y el commit, usas este push
@@ -64,8 +62,4 @@ Entonces, cada vez que arrancas:
 ```bash
 git checkout nombre-de-tu-rama
 git pull origin nombre-de-tu-rama
-<<<<<<< HEAD
->>>>>>> 702d3b20b156e6de54b5a821ca862448318d93ea
-=======
->>>>>>> 702d3b20b156e6de54b5a821ca862448318d93ea
 ```
