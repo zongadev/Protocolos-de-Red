@@ -12,7 +12,6 @@ Primero: pulleamos el main no vaya a ser que alguien haya subido algo
 =======
 ### Guia de comandos rapida
 Antes de empezar, pulleamos el main.
->>>>>>> 702d3b20b156e6de54b5a821ca862448318d93ea
 ```bash
 git checkout main
 git pull origin main
