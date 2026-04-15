@@ -30,14 +30,15 @@ int main() {
     struct sockaddr_in dest;
     int sockfd, one = 1;
     struct timeval timeout = {1, 0};  // 1 segundo de timeout
-
+    
+    printf("Crea el socket de tipo raw con protocolo ICMP \n");
     sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (sockfd < 0) {
         perror("socket");
         return 1;
     }
-
     // Permite incluir cabecera IP
+    printf("Setea el socket para que no genere el IP header automaticamente \n");
     setsockopt(sockfd, IPPROTO_IP, IP_HDRINCL, &one, sizeof(one));
     // Configura timeout de recepción
     setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
@@ -47,7 +48,9 @@ int main() {
 
     for (int seq = 1; seq <= MAX_PINGS; seq++) {
         memset(packet, 0, PACKET_SIZE);
-
+        printf("Crea la estructura del header de IP y del ICMP seteando la misma direccion inicial del packet al iphdr \n");
+        printf("El header va a tomar los bytes que le correspondan a su tamano. \n");
+        printf("El ICMPhdr se setea sumando el tamano del iphdr a la direccion del packet, saltando asi el iphdr y seteando el inicio del icmphdr");
         struct iphdr *ip = (struct iphdr *) packet;
         struct icmphdr *icmp = (struct icmphdr *) (packet + sizeof(struct iphdr));
 
@@ -62,6 +65,7 @@ int main() {
         ip->protocol = IPPROTO_ICMP;
         ip->saddr = inet_addr("127.0.0.1");  // IP local para pruebas
         ip->daddr = dest.sin_addr.s_addr;
+        printf("Calcula el checksum manualmente, antes seteado en cero  \n");
         ip->check = checksum((unsigned short *)ip, sizeof(struct iphdr));
 
         // ICMP Header
@@ -70,7 +74,7 @@ int main() {
         icmp->un.echo.id = htons(1234);
         icmp->un.echo.sequence = htons(seq);
         icmp->checksum = checksum((unsigned short *)icmp, sizeof(struct icmphdr));
-
+        printf("Envia el paquete  \n ");
         if (sendto(sockfd, packet, ntohs(ip->tot_len), 0,
                    (struct sockaddr *)&dest, sizeof(dest)) < 0) {
             perror("sendto");
@@ -92,10 +96,11 @@ int main() {
             else
                 perror("recvfrom");
         } else {
+            printf("Setea el socket para recibir el paquete y lo empieza a desarmar de la misma froma que lo inicializamos\n tomando la longitud del header dada en palabras  \n ");
             struct iphdr *recv_ip = (struct iphdr *)recv_buffer;
             struct icmphdr *recv_icmp = (struct icmphdr *)(recv_buffer + (recv_ip->ihl * 4));
-
-            if (recv_icmp->type == ICMP_ECHOREPLY) {
+            printf("Si el tipo de mensaje recibido es ICMP, printea una cosa sino printea otra. Igual no funciona bien.");
+            if (recv_icmp->type == ICMP_ECHOREPLY) { 
                 printf("Respuesta ICMP #%d recibida desde %s\n\n",
                        ntohs(recv_icmp->un.echo.sequence),
                        inet_ntoa(recv_addr.sin_addr));
