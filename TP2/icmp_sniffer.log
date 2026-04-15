@@ -1,0 +1,11 @@
+2026-04-15 17:23:00 - Sniffer ICMP iniciado
+2026-04-15 17:23:25 - ICMP capturado: Origen=127.0.0.1 Tipo=8 Código=0 ID=1234 Secuencia=1 Tamaño=28 bytes
+2026-04-15 17:23:25 - ICMP capturado: Origen=127.0.0.1 Tipo=0 Código=0 ID=1234 Secuencia=1 Tamaño=28 bytes
+2026-04-15 17:23:26 - ICMP capturado: Origen=127.0.0.1 Tipo=8 Código=0 ID=1234 Secuencia=2 Tamaño=28 bytes
+2026-04-15 17:23:26 - ICMP capturado: Origen=127.0.0.1 Tipo=0 Código=0 ID=1234 Secuencia=2 Tamaño=28 bytes
+2026-04-15 17:23:27 - ICMP capturado: Origen=127.0.0.1 Tipo=8 Código=0 ID=1234 Secuencia=3 Tamaño=28 bytes
+2026-04-15 17:23:27 - ICMP capturado: Origen=127.0.0.1 Tipo=0 Código=0 ID=1234 Secuencia=3 Tamaño=28 bytes
+2026-04-15 17:23:28 - ICMP capturado: Origen=127.0.0.1 Tipo=8 Código=0 ID=1234 Secuencia=4 Tamaño=28 bytes
+2026-04-15 17:23:28 - ICMP capturado: Origen=127.0.0.1 Tipo=0 Código=0 ID=1234 Secuencia=4 Tamaño=28 bytes
+2026-04-15 17:23:29 - ICMP capturado: Origen=127.0.0.1 Tipo=8 Código=0 ID=1234 Secuencia=5 Tamaño=28 bytes
+2026-04-15 17:23:29 - ICMP capturado: Origen=127.0.0.1 Tipo=0 Código=0 ID=1234 Secuencia=5 Tamaño=28 bytes
