@@ -10,11 +10,14 @@ PORT = 6667          # Puerto del servidor
 def enviar_archivo():
     file_name = input("Ingrese el nombre del archivo a enviar:")
     file_size = os.path.getsize(file_name)
+
     #lo mandas por chunks
     sock.sendall(file_size.to_bytes(8, byteorder='big'))
+
     with open(file_name,"rb") as f:
         while chunk := f.read(1024):
             sock.sendall(chunk)
+            
     len_msg = struct.unpack(">I", sock.recv(4))[0]
     print(sock.recv(len_msg))
 def escuchar():

@@ -45,7 +45,7 @@ def proceso_hijo(conn, addr):
                         chunk = conn.recv(capacidad_lectura)
                         if not chunk:
                             break
-                        
+            
                         f.write(chunk)
                         recibido += len(chunk)
                 print(f"Archivo guardado exitosamente como {nombre_arch}")
