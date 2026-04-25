@@ -34,17 +34,16 @@ if __name__ == "__main__":
         print(f"Conectando a servidor en {HOST}:{PORT}...")
         sock.connect((HOST, PORT))
         threading.Thread(target=escuchar, daemon=True).start()
-        print("Ingrese 'enviar' si quiere enviar")
-        while 1:
-            op =input()
-            if((op=="enviar")):
+        print("Elija una opcion")
+        print("(1)- Enviar \n (2)- Salir")
+        op = input()
+        while (op not in ['1','2']):
+            op = input()
+        while op!= 2:
+            if((op==1)):
                 threading.Thread(target=enviar_archivo, daemon=True).start()
-            if(op=="exit"):
-                break
-
-                
-            
-
+            if(op==2):
+                break 
 
     except ConnectionRefusedError:
         print("No se pudo conectar al servidor. Verifique si está activo.")

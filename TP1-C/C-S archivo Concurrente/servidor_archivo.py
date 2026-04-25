@@ -20,14 +20,17 @@ PORT = 6667
 def proceso_hijo(conn, addr):
     inicio_cliente = time.perf_counter()
     cliente_id = f"{addr[0]}:{addr[1]}" #addr tiene tanto ip, como puerto. id:puerto
+
     with clientes_lock:
         clientes.append({
         "id": cliente_id,
         "inicio": inicio_cliente})
+
         print("Los clientes conectados son:")
         for c in clientes:
             conectado_hace = time.perf_counter() - c["inicio"]
             print(f"     {c['id']} - conectado hace {conectado_hace:.2f} s")
+
     try:
         conn.send("Servidor: Conectado con cliente\n".encode('utf-8'))
         while not apagado.is_set():
@@ -55,7 +58,6 @@ def proceso_hijo(conn, addr):
                 msg_bytes = mensaje.encode("utf-8")
                 conn.sendall(struct.pack(">I", len(msg_bytes))) #envia la longitud del mensaje
                 conn.sendall(msg_bytes)
-
             else:
                 break
     except Exception as e:
@@ -92,5 +94,11 @@ def servidor_tcp():
 if __name__ == "__main__":
     # Inicia servidor TCP en un hilo
     threading.Thread(target=servidor_tcp, daemon=True).start()
-    while 1:
-        continue
+    while not apagado.is_set():
+        try:
+            time.sleep(10)
+            contador +=10
+            print(f"Servidor encendido hace {contador} segundos")
+        except KeyboardInterrupt:
+            print("Cerrando servidor")
+            apagado.set()

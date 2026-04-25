@@ -30,7 +30,8 @@ if __name__ == "__main__":
 
         print(f"Conectando a servidor en {HOST}:{PORT}...")
         sock.connect((HOST, PORT))
-        while 1:
+        op = 'Y'
+        while (op=='Y'):
             print("Ingrese el nombre del archivo a enviar:")
             file_name = input()
             file_size = os.path.getsize(file_name)
@@ -45,9 +46,10 @@ if __name__ == "__main__":
                     sock.sendall(chunk)
             
             print(sock.recv(1024))
-
-
-
+            op = input("Desea continuar enviando archivos? (Y/N)")
+            while (op not in ['Y','N']):
+                op = input()
+        
     except ConnectionRefusedError:
         print("No se pudo conectar al servidor. Verifique si está activo.")
     except Exception as e:
