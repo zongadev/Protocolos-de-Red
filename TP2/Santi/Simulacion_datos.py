@@ -1,7 +1,10 @@
 import database2 as db
+import requests
 import random
 import time
 from datetime import datetime
+
+URL = "http://127.0.0.1:5001/sensors"
 
 def simular_sensores(cantidad_capturas=10, intervalo_segundos=2):
     print(f"--- Iniciando simulación: {cantidad_capturas} capturas cada {intervalo_segundos}s ---")
@@ -22,13 +25,24 @@ def simular_sensores(cantidad_capturas=10, intervalo_segundos=2):
             "presion_nm": 1015,
             "temp_ext": 15.5
         }
+        
+       
+        
+        try:
+            respuesta = requests.post(URL,json=lectura)
+            if respuesta.status_code == 201:
+                datos_servidor = respuesta.json()
+                id_generado = datos_servidor['sensor']['id']
+                print(f"[{i+1}/{cantidad_capturas}] Guardado ID: {id_generado} | CO2: {lectura['co2']} | Temp: {lectura['temp']}°C")
+                print(f"[{i+1}/{cantidad_capturas}] ÉXITO: Guardado ID {id_generado} | CO2: {lectura['co2']}")
+            else:
+                print(f"[{i+1}/{cantidad_capturas}]  ERROR: Código {respuesta.status_code} - {respuesta.text}")
 
-        # Guardar en la base de datos
-        id_generado = db.crear_sensor(lectura)
-        
-        print(f"[{i+1}/{cantidad_capturas}] Guardado ID: {id_generado} | CO2: {lectura['co2']} | Temp: {lectura['temp']}°C")
-        
-        # Esperar el intervalo configurado (excepto en la última vuelta)
+        except requests.exceptions.ConnectionError:
+            print(f"[{i+1}/{cantidad_capturas}] ERROR")
+            break 
+
+
         if i < cantidad_capturas - 1:
             time.sleep(intervalo_segundos)
 
